@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.spring.dto.UserDTO;
 import com.spring.entity.User;
-import com.spring.mapper.UserMapper;
 import com.spring.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
 package com.spring.dto;
 
-
 import com.spring.model.Authority;
 
 import lombok.AllArgsConstructor;

@@ -1,5 +1,6 @@
 package com.spring.api;
 
+
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.dto.UserDTO;
+
 import com.spring.entity.User;
+
 import com.spring.service.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class UserController {
 	private final UserServiceImpl userService;
 	
 	@GetMapping(value = "/user/{userNo}")
+
 	public User getUserByUserNo(@PathVariable Long userNo) {
 		User user = userService.getUserByUserNo(userNo);
 		return user;
@@ -35,7 +39,6 @@ public class UserController {
 	
 	@PostMapping(value = "/join",consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void insertUser(@RequestBody User user) {
-		
 //		userService.insertUser(user);	
 	}
 	
