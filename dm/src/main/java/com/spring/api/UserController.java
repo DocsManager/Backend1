@@ -1,5 +1,6 @@
 package com.spring.api;
 
+
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -35,6 +36,7 @@ public class UserController {
 	
 	@GetMapping(value = "/alluser")
 	public List<UserDTO> getAllUser(){
+
 		return userService.getAllUser();
 	}
 	
@@ -46,6 +48,7 @@ public class UserController {
 	@PutMapping(value = "/profile", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateProfile(@RequestBody UserDTO userDTO) {
 		userService.updateUser(userDTO);
+
 	}
 	
 }

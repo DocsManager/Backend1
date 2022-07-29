@@ -1,6 +1,6 @@
 package com.spring.service;
 
-import com.spring.dto.WorkspaceDTO;
+simport com.spring.dto.WorkspaceDTO;
 
 public interface WorkspaceService {
 	

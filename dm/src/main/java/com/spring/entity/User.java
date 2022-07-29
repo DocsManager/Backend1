@@ -73,5 +73,4 @@ public class User {
 							.profile(user.getProfile())
 							.build();
 		return userDTO;		
-	}
 }

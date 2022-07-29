@@ -3,7 +3,6 @@ package com.spring.dto;
 
 
 import java.sql.Date;
-
 import com.spring.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +19,8 @@ public class UserDTO {
 	private Long userNo;
 	
 	private DepartmentDTO dept;
+	
+	private String id;
 	
 	private String id;
 	
