@@ -61,6 +61,16 @@ public class User {
 	@Size(max = 300)
 	private String profile;
 	
-	
-	
+	public UserDTO toDTO(User user) {
+		UserDTO userDTO = UserDTO.builder()
+							.userNo(user.getUserNo())
+							.dept(user.getDept().toDTO(user.getDept()))
+							.id(user.getId())
+							.password(user.getPassword())
+							.name(user.getName())
+							.email(user.getEmail())
+							.registerDate(user.getRegisterDate())
+							.profile(user.getProfile())
+							.build();
+		return userDTO;		
 }
