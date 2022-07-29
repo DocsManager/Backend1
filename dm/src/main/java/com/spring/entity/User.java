@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.spring.dto.UserDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,5 +60,7 @@ public class User {
 	
 	@Size(max = 300)
 	private String profile;
+	
+	
 	
 }
