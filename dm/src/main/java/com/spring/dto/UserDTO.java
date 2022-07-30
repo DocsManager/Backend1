@@ -2,7 +2,8 @@ package com.spring.dto;
 
 
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+
 import com.spring.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class UserDTO {
 	
 	private String email;
 	
-	private Date registerDate;
+	private LocalDateTime registerDate;
 	
 	private String profile;
 	

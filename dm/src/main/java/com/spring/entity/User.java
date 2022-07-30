@@ -2,7 +2,7 @@ package com.spring.entity;
 
 
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +57,7 @@ public class User {
 	private String email;
 	
 	@CreatedDate
-	private Date registerDate;
+	private LocalDateTime registerDate;
 	
 	@Size(max = 300)
 	private String profile;
@@ -73,6 +73,8 @@ public class User {
 							.registerDate(user.getRegisterDate())
 							.profile(user.getProfile())
 							.build();
+		
 		return userDTO;		
+
 	}
 }
