@@ -22,7 +22,7 @@ public class UserDTO {
 	
 	private String id;
 	
-	private String id;
+//	private String id;
 	
 	private String password;
 	
