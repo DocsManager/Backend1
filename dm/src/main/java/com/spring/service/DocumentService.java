@@ -12,15 +12,22 @@ public interface DocumentService {
 //	public List<DocumentDTO> getAllDocuments();
 	
 	// 문서 조회
-	public DocumentDTO getDocumentByDocumentNo(Long documentNo);
+	public DocumentDTO selectDocument(Long documentNo);
 
+	// 문서 다운로드
+	public void downloadDocument(Long documentNo);
+	
 	// 문서 작성
 	public void insertDocument(DocumentDTO documentDTO, MultipartFile multipartFile);
 	
-	// 문서 수정
+	
+	// 문서 수정(파일, 문서 내용)
+	public void updateDocument(Long documentNo, DocumentDTO documentDTO, MultipartFile multipartFile);
+
+	// 문서 수정(문서 내용)
 	public void updateDocument(Long documentNo, DocumentDTO documentDTO);
 	
 	// 문서 삭제
-	public void deleteDocumentByDocumentNo(Long documentNo);
+	public void deleteDocument(Long documentNo);
 	
 }
