@@ -29,6 +29,7 @@ import com.spring.service.DocumentUserServiceImpl;
 import com.spring.service.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
+@CrossOrigin(origins = "*")
 
 @RestController
 @RequestMapping(value = "/api")
@@ -83,6 +84,37 @@ public class DocumentUserController {
 		}
 		
 		
+		// 유저 중요 문서 리스트
+		@GetMapping("/documents/user/important/{userNo}")
+		public PageResultDTO<DocumentUserDTO, DocumentUser> getImportantDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer important, Integer recycle){
+			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
+					
+			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getImportantList(userNo, pageRequestDTO, important, recycle);
+					
+			List<DocumentUserDTO> resultBoards = new ArrayList<DocumentUserDTO>(); 
+			pageResultDTO.getDtoList().forEach(BoardDTO -> resultBoards.add(BoardDTO));
+					
+			return pageResultDTO;
+				
+		}
+		
+		// 유저 휴지통 문서 리스트
+		@GetMapping("/documents/user/recycle/{userNo}")
+		public PageResultDTO<DocumentUserDTO, DocumentUser> getRecycleDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer recycle){
+			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
+							
+			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getRecycleList(userNo, pageRequestDTO, recycle);
+							
+			List<DocumentUserDTO> resultBoards = new ArrayList<DocumentUserDTO>(); 
+			pageResultDTO.getDtoList().forEach(BoardDTO -> resultBoards.add(BoardDTO));
+							
+			return pageResultDTO;
+						
+		}
+		
+		
+	
+	
 		// 유저 문서 조회
 		@GetMapping(value = "/document/user/{userNo}")
 		public List<DocumentUserDTO> selectDocumentUser(@PathVariable Long userNo){
@@ -110,6 +142,7 @@ public class DocumentUserController {
 				documentUserDTO.get(i).setDocumentNo(documentDTO);
 			}
 			documentUserService.updateDocumentUser(documentUserDTO);
+			
 		}
 		
 		// 문서 삭제
