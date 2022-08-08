@@ -29,7 +29,6 @@ import com.spring.service.DocumentUserServiceImpl;
 import com.spring.service.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
-@CrossOrigin(origins = "*")
 
 @RestController
 @RequestMapping(value = "/api")
@@ -69,7 +68,7 @@ public class DocumentUserController {
 				
 		}
 		
-		// 유저 휴지통 문서 리스트
+		// 유저 휴지통 리스트
 		@GetMapping("/documents/user/recycle/{userNo}")
 		public PageResultDTO<DocumentUserDTO, DocumentUser> getRecycleDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer recycle){
 			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
@@ -84,8 +83,6 @@ public class DocumentUserController {
 		}
 		
 		
-	
-	
 		// 유저 문서 조회
 		@GetMapping(value = "/document/user/{userNo}")
 		public List<DocumentUserDTO> selectDocumentUser(@PathVariable Long userNo){
@@ -113,15 +110,13 @@ public class DocumentUserController {
 				documentUserDTO.get(i).setDocumentNo(documentDTO);
 			}
 			documentUserService.updateDocumentUser(documentUserDTO);
-			
 		}
 		
 		// 문서 삭제
-		@DeleteMapping(value = "/document/{documentNo}/{userNo}")
+		@DeleteMapping(value = "/document/{userNo}", consumes = MediaType.APPLICATION_JSON_VALUE)
 		@Transactional
-		public void deleteDocument(@PathVariable Long documentNo, @PathVariable Long userNo) {
-			DocumentUserDTO documentUserDTO = documentUserService.getDocumentUserByUserNoAndDocumentNo(userNo, documentNo);
-			documentUserService.deleteDocumentUser(documentUserDTO);
+		public void deleteDocument(@RequestBody List<Long> documentNo, @PathVariable Long userNo) {
+			documentUserService.deleteDocumentUser(documentNo, userNo);
 		}
 	
 }
