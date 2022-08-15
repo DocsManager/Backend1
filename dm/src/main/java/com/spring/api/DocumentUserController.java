@@ -29,8 +29,6 @@ import com.spring.service.DocumentUserServiceImpl;
 import com.spring.service.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
-@CrossOrigin(origins = "*")
-
 @RestController
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
@@ -71,11 +69,12 @@ public class DocumentUserController {
 		}
 		
 		// 유저 휴지통 리스트
+
 		@GetMapping("/documents/user/recycle/{userNo}")
 		public PageResultDTO<DocumentUserDTO, DocumentUser> getRecycleDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer recycle){
 			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
-			System.out.println(recycle);
-			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getRecycleList(userNo, pageRequestDTO, recycle	);
+							
+			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getRecycleList(userNo, pageRequestDTO, recycle);
 							
 			List<DocumentUserDTO> resultBoards = new ArrayList<DocumentUserDTO>(); 
 			pageResultDTO.getDtoList().forEach(BoardDTO -> resultBoards.add(BoardDTO));
@@ -83,6 +82,7 @@ public class DocumentUserController {
 			return pageResultDTO;
 						
 		}
+		
 		
 	
 	
