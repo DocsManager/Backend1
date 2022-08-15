@@ -81,7 +81,6 @@ public class S3Util {
       String originalFileName =  multipart.getOriginalFilename();
       String filename = "document/"+UUID.randomUUID().toString() + "_" + originalFileName;
       
-      
       try {
          S3Util.uploadFile(filename, multipart.getInputStream());
          documentDTO.setOriginalName(originalFileName);
