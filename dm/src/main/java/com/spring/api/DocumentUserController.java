@@ -29,6 +29,7 @@ import com.spring.service.DocumentUserServiceImpl;
 import com.spring.service.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
+@CrossOrigin(origins = "*")
 
 @RestController
 @RequestMapping(value = "/api")
@@ -44,6 +45,7 @@ public class DocumentUserController {
 		@GetMapping("/documents/user/{userNo}")
 		public PageResultDTO<DocumentUserDTO, DocumentUser> getDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer recycle){
 			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(20).build();
+
 			
 			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getList(userNo, pageRequestDTO, recycle);
 			
@@ -82,7 +84,8 @@ public class DocumentUserController {
 						
 		}
 		
-		
+	
+	
 		// 유저 문서 조회
 		@GetMapping(value = "/document/user/{userNo}")
 		public List<DocumentUserDTO> selectDocumentUser(@PathVariable Long userNo){
@@ -110,6 +113,7 @@ public class DocumentUserController {
 				documentUserDTO.get(i).setDocumentNo(documentDTO);
 			}
 			documentUserService.updateDocumentUser(documentUserDTO);
+			
 		}
 		
 		// 문서 삭제
