@@ -43,7 +43,7 @@ public class DocumentUserController {
 		// 유저 문서 리스트
 		@GetMapping("/documents/user/{userNo}")
 		public PageResultDTO<DocumentUserDTO, DocumentUser> getDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer recycle){
-			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
+			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(20).build();
 			
 			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getList(userNo, pageRequestDTO, recycle);
 			
@@ -57,7 +57,7 @@ public class DocumentUserController {
 		// 유저 중요 문서 리스트
 		@GetMapping("/documents/user/important/{userNo}")
 		public PageResultDTO<DocumentUserDTO, DocumentUser> getImportantDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer important, Integer recycle){
-			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
+			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(20).build();
 					
 			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getImportantList(userNo, pageRequestDTO, important, recycle);
 					
@@ -72,8 +72,8 @@ public class DocumentUserController {
 		@GetMapping("/documents/user/recycle/{userNo}")
 		public PageResultDTO<DocumentUserDTO, DocumentUser> getRecycleDocuments(@PathVariable Long userNo, PageRequestDTO pageDTO, Integer recycle){
 			PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(pageDTO.getPage()).size(10).build();
-							
-			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getRecycleList(userNo, pageRequestDTO, recycle);
+			System.out.println(recycle);
+			PageResultDTO<DocumentUserDTO, DocumentUser> pageResultDTO = documentUserService.getRecycleList(userNo, pageRequestDTO, recycle	);
 							
 			List<DocumentUserDTO> resultBoards = new ArrayList<DocumentUserDTO>(); 
 			pageResultDTO.getDtoList().forEach(BoardDTO -> resultBoards.add(BoardDTO));
