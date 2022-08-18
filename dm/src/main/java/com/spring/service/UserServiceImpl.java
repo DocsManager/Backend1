@@ -71,5 +71,16 @@ public class UserServiceImpl implements UserService{
 		userList.forEach(v->userDTOList.add(v.toDTO(v)));
 		return userDTOList;
 	}
+	
+	@Override
+	public List<UserDTO> findByIdList(List<Long> userNoList){
+		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
+		userNoList.forEach(v -> {UserDTO userDTO = getUserByUserNo(v);
+								if(userDTO !=  null) {
+									userDTOList.add(userDTO);
+									}});
+		return userDTOList;
+//		userNoList.forEach(v => userDTOList.add(getUserById(userNo)));
+	}
 
 }
