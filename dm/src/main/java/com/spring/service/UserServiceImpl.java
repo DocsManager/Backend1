@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService{
 									userDTOList.add(userDTO);
 									}});
 		return userDTOList;
-//		userNoList.forEach(v => userDTOList.add(getUserById(userNo)));
 	}
 
 }
