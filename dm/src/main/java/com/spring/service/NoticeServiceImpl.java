@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import com.spring.dto.NoticeDTO;
 import com.spring.dto.NoticeDTO.NoticeRequest;
 import com.spring.dto.NoticeDTO.NoticeResponse;
 import com.spring.entity.Notice;
+import com.spring.entity.User;
 import com.spring.repository.NoticeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class NoticeServiceImpl implements NoticeService{
 
 	private final NoticeRepository noticeRepository;
+	private final SimpMessagingTemplate messagingTemplate;
+	
 	@Override
 	@Transactional(readOnly=true) //import org.springframework.transaction.annotation.Transactional;를 임포트 해야함
 	public List<NoticeResponse> findAllNotices() {
@@ -69,6 +73,20 @@ public class NoticeServiceImpl implements NoticeService{
 		}
 		noticeRepository.save(notice);
 		
+	}
+	
+	@Override
+	public void sendGlobalNotice(User sender, User receiver, String content, Integer isRead) {
+		NoticeRequest newNotice = new NoticeRequest(sender,receiver, content, isRead );
+		messagingTemplate.convertAndSend("/topic/global-notification", newNotice);
+		noticeRepository.save(newNotice.toEntity());
+	}
+	
+	@Override
+	public void sendWorkSpaceNotice(User sender, User receiver, String content, Integer isRead) {
+		NoticeRequest newNotice = new NoticeRequest(sender, receiver, content, isRead);
+		messagingTemplate.convertAndSend("/topic/global-notification", newNotice);
+		noticeRepository.save(newNotice.toEntity());
 	}
 
 

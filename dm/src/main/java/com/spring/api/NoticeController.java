@@ -2,6 +2,8 @@ package com.spring.api;
 
 import java.util.List;
 
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,5 +63,35 @@ public class NoticeController {
 	@PutMapping("/notice/{noticeNo}")
 	public void updateNotice(@PathVariable Long noticeNo, @RequestBody NoticeRequest noticeDTO) {
 		noticeService.updateNotice(noticeNo, noticeDTO);
+	}
+	
+	@MessageMapping("/notice")
+	@SendTo("/topic/notice")
+	public void getMessage(List<Notice> notice) {
+		
+		try {
+			Thread.sleep(500);
+			notice.forEach((v)->{
+				noticeService.sendGlobalNotice(v.getSender(), v.getReceiver(), v.getContent(), v.getIsRead());
+			});
+			
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	
+		
+	}
+	
+	@MessageMapping("/workspace")
+	@SendTo("/queue/workspace")
+	public void getWorkSpaceMessage(List<Notice> notice) {
+		try {
+			Thread.sleep(1000);
+			notice.forEach((v)->{
+				noticeService.sendWorkSpaceNotice(v.getSender(), v.getReceiver(), v.getContent(), v.getIsRead());
+			});
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

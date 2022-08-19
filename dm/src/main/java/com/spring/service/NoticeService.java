@@ -5,6 +5,7 @@ import java.util.List;
 import com.spring.dto.NoticeDTO.NoticeRequest;
 import com.spring.dto.NoticeDTO.NoticeResponse;
 import com.spring.entity.Notice;
+import com.spring.entity.User;
 
 public interface NoticeService {
 	
@@ -20,5 +21,9 @@ public interface NoticeService {
 	public void deleteNotice(Long noticeNo);
 	
 	public void updateNotice(Long noticeNo, NoticeRequest noticeDTO);
+	
+	public void sendGlobalNotice(User sender, User Receiver, String content, Integer isRead);
+
+	public void sendWorkSpaceNotice(User sender, User receiver, String content, Integer isRead);
 	
 }
