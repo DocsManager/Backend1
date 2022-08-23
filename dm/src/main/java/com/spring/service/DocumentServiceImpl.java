@@ -50,6 +50,7 @@ public class DocumentServiceImpl implements DocumentService{
       Document document = documentRepository.findDocumentByDocumentNo(documentNo);
       return document == null ? null : document.toDTO(document);   
    // 문서 작성
+   }
    
    
    // DB INSERT
