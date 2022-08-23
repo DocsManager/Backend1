@@ -19,5 +19,7 @@ public interface UserService {
 	public void updateUser(UserDTO userDTO);
 
 	public List<UserDTO> findByName(String name);
+	
+	public List<UserDTO> findByNameAndEmail(String name, String email);
 
 }
