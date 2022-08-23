@@ -76,6 +76,7 @@ public class UserController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+
 		}
 		return userDTO;
 	}
@@ -137,5 +138,10 @@ public class UserController {
 	@GetMapping(value = "/user/name/{name}")
 	public List<UserDTO> findByName(@PathVariable String name) {
 		return userService.findByName(name);
+	}
+	
+	@PostMapping(value ="/user/member", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public List<UserDTO> getMemberList(@RequestBody List<Long> userNoList){
+		return userService.findByIdList(userNoList);
 	}
 }

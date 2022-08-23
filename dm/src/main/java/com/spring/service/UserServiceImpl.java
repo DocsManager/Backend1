@@ -83,6 +83,13 @@ public class UserServiceImpl implements UserService{
 		List<User> userList = userRepository.findAllByIdAndEmail(id, email);
 		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		userList.forEach(v->userDTOList.add(v.toDTO(v)));
+	@Override
+	public List<UserDTO> findByIdList(List<Long> userNoList){
+		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
+		userNoList.forEach(v -> {UserDTO userDTO = getUserByUserNo(v);
+								if(userDTO !=  null) {
+									userDTOList.add(userDTO);
+									}});
 		return userDTOList;
 	}
 

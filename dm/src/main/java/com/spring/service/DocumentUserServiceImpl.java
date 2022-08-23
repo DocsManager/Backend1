@@ -16,6 +16,7 @@ import com.spring.dto.PageResultDTO;
 import com.spring.entity.Document;
 import com.spring.entity.DocumentUser;
 import com.spring.entity.User;
+import com.spring.model.Authority;
 import com.spring.repository.DocumentUserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,20 @@ public class DocumentUserServiceImpl implements DocumentUserService {
 	public PageResultDTO<DocumentUserDTO, DocumentUser> getList(Long userNo, PageRequestDTO pageRequestDTO, Integer recycle) {
 		Pageable pageable = pageRequestDTO.getPageable(Sort.by("documentNo").descending());
 		recycle = 0;
-		Page<DocumentUser> result =  documentUserRepository.findDocumentUserByUserNoUserNoAndRecycleBin(userNo, pageable, recycle);
+		
+		Page<DocumentUser> result =  documentUserRepository.findDocumentUserByUserNoUserNoAndRecycleBinAndAuthority(userNo, pageable, recycle, Authority.MASTER);
+
+		Function<DocumentUser, DocumentUserDTO> function = (Document -> Document.toDTO(Document));
+		
+		return new PageResultDTO<DocumentUserDTO, DocumentUser>(result, function);
+	}
+	
+	@Override
+	public PageResultDTO<DocumentUserDTO, DocumentUser> getShareList(Long userNo, PageRequestDTO pageRequestDTO, Integer recycle) {
+		Pageable pageable = pageRequestDTO.getPageable(Sort.by("documentNo").descending());
+		recycle = 0;
+		
+		Page<DocumentUser> result =  documentUserRepository.findDocumentUserByUserNoUserNoAndRecycleBinAndAuthorityNot(userNo, pageable, recycle, Authority.MASTER);
 
 		Function<DocumentUser, DocumentUserDTO> function = (Document -> Document.toDTO(Document));
 		
@@ -79,7 +93,14 @@ public class DocumentUserServiceImpl implements DocumentUserService {
 	public void insertDocumentUser(List<DocumentUserDTO> documentUserDTOs) {
 		List<DocumentUser> documentUsers = new ArrayList<DocumentUser>();
 		
-		documentUserDTOs.forEach(v-> documentUsers.add(v.toEntity(v)));
+//		documentUserDTOs.forEach(v->getDocumentUserByUserNoAndDocumentNo(v., documentNo));
+		documentUserDTOs.forEach(v->{DocumentUserDTO oldDocumentUserDTO = getDocumentUserByUserNoAndDocumentNo(v.getUserNo().getUserNo(), v.getDocumentNo().getDocumentNo());
+									if(oldDocumentUserDTO != null) {
+										DocumentUserDTO newDocumentDTO = new DocumentUserDTO(oldDocumentUserDTO,v);
+										documentUsers.add(newDocumentDTO.toEntity(newDocumentDTO));
+									}else{
+										documentUsers.add(v.toEntity(v));
+									}});
 		documentUserRepository.saveAll(documentUsers);
 	}
 	
@@ -103,6 +124,14 @@ public class DocumentUserServiceImpl implements DocumentUserService {
 			}
 		}
 		
+	}
+	
+	@Override
+	public List<DocumentUserDTO> getMemberList(Long documentNo) {
+		List<DocumentUser> documentUserList = documentUserRepository.findAllByDocumentNoDocumentNo(documentNo);
+		List<DocumentUserDTO> documentUserDTOList = new ArrayList<DocumentUserDTO>();
+		documentUserList.forEach(v->documentUserDTOList.add(v.toDTO(v)));
+		return documentUserDTOList;
 	}
 
 }

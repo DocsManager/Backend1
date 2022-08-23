@@ -13,6 +13,8 @@ import com.spring.entity.User;
 public interface DocumentUserService {
 	
 	public PageResultDTO<DocumentUserDTO, DocumentUser> getList(Long userNo, PageRequestDTO pageRequestDTO, Integer recycle);
+	
+	public PageResultDTO<DocumentUserDTO, DocumentUser> getShareList(Long userNo, PageRequestDTO pageRequestDTO, Integer recycle);
 
 	public PageResultDTO<DocumentUserDTO, DocumentUser> getImportantList(Long userNo, PageRequestDTO pageRequestDTO, Integer important, Integer recycle);
 
@@ -27,4 +29,8 @@ public interface DocumentUserService {
 	public void deleteDocumentUser(List<Long> documentNo, Long userNo);
 
 	public void updateDocumentUser(List<DocumentUserDTO> documentUserDTO);
+
+
+	public List<DocumentUserDTO> getMemberList(Long documentNo);
+	
 }

@@ -48,9 +48,7 @@ public class DocumentServiceImpl implements DocumentService{
    @Override
    public DocumentDTO selectDocument(Long documentNo) {
       Document document = documentRepository.findDocumentByDocumentNo(documentNo);
-      return document == null ? null : document.toDTO(document);
-   }
-   
+      return document == null ? null : document.toDTO(document);   
    // 문서 작성
    
    
@@ -73,6 +71,9 @@ public class DocumentServiceImpl implements DocumentService{
 		} catch (UploadFailedException e) {
 			e.printStackTrace();
 		}
+         
+         
+         
       }   
    
    // 문서 수정(파일, 문서 내용)
