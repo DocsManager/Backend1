@@ -118,5 +118,10 @@ public class DocumentUserServiceImpl implements DocumentUserService {
 		}
 		
 	}
+	
+	@Override
+	public List<String> findUserNoByDocumentNo(Long documentNo){
+		return documentUserRepository.findUserNoByDocumentNo(documentNo);
+	}
 
 }

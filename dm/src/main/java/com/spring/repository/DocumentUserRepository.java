@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.spring.entity.Document;
 import com.spring.entity.DocumentUser;
@@ -29,4 +30,8 @@ public interface DocumentUserRepository extends JpaRepository<DocumentUser, Long
 	public DocumentUser findDocumentUserByUserNoUserNoAndDocumentNoDocumentNo(Long userNo,Long documentNo);
 
 	public void deleteDocumentUserByUserNoUserNoAndDocumentNoDocumentNo(Long userNo, Long documentNo);
+	
+	
+	@Query(value = "SELECT user_no FROM user WHERE user_no IN(SELECT user_no FROM document_user WHERE document_no =:documentNo)", nativeQuery = true)
+	public List<String> findUserNoByDocumentNo(Long documentNo);
 }
