@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
+import org.hibernate.annotations.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +69,7 @@ public class NoticeServiceImpl implements NoticeService{
 				.collect(Collectors.toList());
 		return noticeList;
 	}
+	
 	@Override
 	public void updateNotice(Long noticeNo, NoticeRequest noticeDTO) {
 		Notice notice = noticeRepository.findByNoticeNo(noticeNo);
@@ -75,19 +80,62 @@ public class NoticeServiceImpl implements NoticeService{
 		
 	}
 	
+//	@Override
+//	public void sendGlobalNotice(User sender, User receiver, String content, Integer isRead) {
+//		NoticeRequest newNotice = new NoticeRequest(sender,receiver, content, isRead );
+//		messagingTemplate.convertAndSend("/topic/notice", newNotice);
+//		noticeRepository.save(newNotice.toEntity());
+//	}
+//	
+//	@Override
+//	public void sendWorkSpaceNotice(User sender, User receiver, String content, Integer isRead) {
+//		NoticeRequest newNotice = new NoticeRequest(sender, receiver, content, isRead);
+//		messagingTemplate.convertAndSend("/queue/workspace/"+receiver.getId(),newNotice);
+//		noticeRepository.save(newNotice.toEntity());		
+//	}
 	@Override
-	public void sendGlobalNotice(User sender, User receiver, String content, Integer isRead) {
-		NoticeRequest newNotice = new NoticeRequest(sender,receiver, content, isRead );
-		messagingTemplate.convertAndSend("/topic/global-notification", newNotice);
-		noticeRepository.save(newNotice.toEntity());
+	public void sendDocsNotice(User sender, User receiver, String content, Integer isRead) {
+		NoticeRequest newNotice = new NoticeRequest(sender, receiver, content, isRead);
+		messagingTemplate.convertAndSend("/queue/sharedocs/"+receiver.getId(),newNotice);
+		noticeRepository.save(newNotice.toEntity());		
+		System.out.println("id:"+receiver.getId());
 	}
 	
 	@Override
 	public void sendWorkSpaceNotice(User sender, User receiver, String content, Integer isRead) {
 		NoticeRequest newNotice = new NoticeRequest(sender, receiver, content, isRead);
-		messagingTemplate.convertAndSend("/topic/global-notification", newNotice);
-		noticeRepository.save(newNotice.toEntity());
+		messagingTemplate.convertAndSend("/queue/workspace/"+receiver.getId(),newNotice);
+		noticeRepository.save(newNotice.toEntity());		
+		System.out.println("id:"+receiver.getId());
 	}
+//	@Override
+//	public void sendWorkSpaceNotice(User sender, User receiver, String content, Integer isRead) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+	
+//	@Override
+//	public void sendWorkSpaceNoticeById(String receiverId, User sender, User receiver, String content, Integer isRead) {
+//		NoticeRequest newNotice = new NoticeRequest(sender, receiver, content, isRead);
+//		messagingTemplate.convertAndSendToUser(receiver.getId(), "/queue/workspace/notice", newNotice);
+//		System.out.println(receiver.getId());
+//		System.out.println(receiver.getUserNo().toString());
+//		System.out.println(receiver.getName());
+//		noticeRepository.save(newNotice.toEntity());
+//	}
+//	@Override
+//	public void sendWorkSpaceNoticeById(User sender, User receiver, String content, Integer isRead) {
+//		NoticeRequest newNotice = new NoticeRequest(sender, receiver, content, isRead);
+//		messagingTemplate.convertAndSend("/queue/workspace-notice",  newNotice);
+//		System.out.println(receiver.getId());
+//		System.out.println(receiver.getUserNo().toString());
+//		System.out.println(receiver.getName());
+//		noticeRepository.save(newNotice.toEntity());
+//	}
+	
+	
+	
+
 
 
 }

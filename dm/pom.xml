@@ -178,7 +178,12 @@
 		    <artifactId>spring-messaging</artifactId>
 		    <version>5.2.2.RELEASE</version>
 		</dependency>
-
+		
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
+		<dependency>
+		    <groupId>org.eclipse.jetty.websocket</groupId>
+		    <artifactId>javax-websocket-client-impl</artifactId>
+		</dependency>
         
 		<dependency>
 	        <groupId>org.springframework.boot</groupId>

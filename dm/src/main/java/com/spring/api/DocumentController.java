@@ -62,9 +62,11 @@ public class DocumentController {
    }
    
    // 문서 작성
+   
    @PostMapping(value = "/document",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-      documentService.insertDocument(documentDTO, documentUserList, multipart);
-   }
+   public void insertDocument(@RequestPart("documentDTO") DocumentDTO documentDTO,@RequestPart("documentUser")List<DocumentUserDTO> documentUserList , @RequestPart("file") MultipartFile multipart) {
+		   documentService.insertDocument(documentDTO, documentUserList, multipart);
+	}
    
    // 문서 수정(파일, 문서 내용)
    @PostMapping(value="/document/{documentNo}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
