@@ -30,6 +30,7 @@ public interface DocumentUserService {
 
 	public void updateDocumentUser(List<DocumentUserDTO> documentUserDTO);
 
+
 	public List<DocumentUserDTO> getMemberList(Long documentNo);
 	
 }
