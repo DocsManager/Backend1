@@ -48,11 +48,13 @@ public class DocumentServiceImpl implements DocumentService{
    @Override
    public DocumentDTO selectDocument(Long documentNo) {
       Document document = documentRepository.findDocumentByDocumentNo(documentNo);
-      return document == null ? null : document.toDTO(document);   
-   // 문서 작성
+      return document == null ? null : document.toDTO(document);
    }
+   // 문서 작성
+
    
    
+
    // DB INSERT
    @Override
    @Transactional
