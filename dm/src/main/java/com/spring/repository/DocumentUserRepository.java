@@ -30,8 +30,6 @@ public interface DocumentUserRepository extends JpaRepository<DocumentUser, Long
 	public DocumentUser findDocumentUserByUserNoUserNoAndDocumentNoDocumentNo(Long userNo,Long documentNo);
 
 	public void deleteDocumentUserByUserNoUserNoAndDocumentNoDocumentNo(Long userNo, Long documentNo);
-	
-	
-	@Query(value = "SELECT user_no FROM user WHERE user_no IN(SELECT user_no FROM document_user WHERE document_no =:documentNo)", nativeQuery = true)
-	public List<String> findUserNoByDocumentNo(Long documentNo);
+
+	public List<DocumentUser> findAllByDocumentNoDocumentNo(Long documentNo);
 }
