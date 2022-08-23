@@ -27,8 +27,9 @@ public class WorkspaceController {
 	private final WorkspaceServiceImpl workspaceService;
 	
 	@PostMapping(value = "/workspace",consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void insertWorkspace(@RequestBody WorkspaceDTO workspaceDTO) {
-		workspaceService.insertWorkspace(workspaceDTO);
+	public List<WorkspaceUserDTO> insertWorkspace(@RequestBody WorkspaceDTO workspaceDTO) {
+		System.out.println(workspaceDTO);
+		return workspaceService.insertWorkspace(workspaceDTO);
 		
 	}
 	
