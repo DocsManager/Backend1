@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -28,17 +29,19 @@ import software.amazon.awssdk.core.waiters.WaiterResponse;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-
+import software.amazon.awssdk.services.s3.model.GetObjectTaggingRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectTaggingResponse;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.Tag;
 import software.amazon.awssdk.services.s3.waiters.S3Waiter;
 
 public class S3Util {
    
    public static final String BUCKET = "test-busan";
-
+   
    
    public static void uploadFile(String fileName, InputStream inputStream) throws S3Exception, AwsServiceException, SdkClientException, IOException {
       S3Client client = S3Client.builder().build();
@@ -48,7 +51,6 @@ public class S3Util {
                                        .build();
       
       client.putObject(request, RequestBody.fromInputStream(inputStream,inputStream.available()));
-   
       S3Waiter waiter = client.waiter();
       HeadObjectRequest waitRequest = HeadObjectRequest.builder()
             .bucket(BUCKET).key(fileName).build();
@@ -85,6 +87,10 @@ public class S3Util {
          S3Util.uploadFile(filename, multipart.getInputStream());
          documentDTO.setOriginalName(originalFileName);
          documentDTO.setFileName(filename);
+         System.out.println(Math.round((((double)multipart.getSize()/1024))*100)/100.0);
+//         documentDTO.setFileSize(Math.round(((((double)multipart.getSize()/1024)/1024))*100)/100.0);
+         documentDTO.setFileSize(Math.round((((double)multipart.getSize()/1024))*100)/100.0);
+
          documentDTO.setFilePath(S3Util.getFileUrl(filename));
          return documentDTO;
       } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.spring.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -21,6 +22,7 @@ import com.spring.entity.WorkspaceUser;
 import com.spring.exception.UploadFailedException;
 import com.spring.repository.DocumentRepository;
 import com.spring.util.S3Util;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -61,6 +63,9 @@ public class DocumentServiceImpl implements DocumentService{
    public void insertDocument(DocumentDTO documentDTO ,List<DocumentUserDTO> documentUserList,MultipartFile multipart) {   
          try {
 			S3Util.S3Upload(multipart, documentDTO);
+			System.out.println(multipart.getSize());
+			System.out.println(multipart.getContentType());
+			
 			Document document = documentRepository.save(documentDTO.toEntity(documentDTO));
 			System.out.println(document);
 //			List<DocumentUserDTO> documentUserDTOs = new ArrayList<DocumentUserDTO>();
@@ -117,4 +122,11 @@ public class DocumentServiceImpl implements DocumentService{
 	}
 
    }
+
+   // 문서 용량
+	@Override
+	public double documentSize(Long userNo) {
+	    return documentRepository.findDocumentSize(userNo);
+		
+	}
 }
