@@ -79,8 +79,8 @@ public class SecurityConfig {
                 .antMatchers("/api/findidpw").permitAll()
                 .antMatchers("/main").authenticated()
                 .antMatchers("/api/logout").authenticated()
-                
-                .anyRequest().permitAll()
+                .antMatchers("/ws-dm/**").permitAll()
+                .anyRequest().authenticated()
                 
                 .and()
                 .formLogin()

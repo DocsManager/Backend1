@@ -1,6 +1,8 @@
 package com.spring.service;
 
-import java.util.ArrayList;
+
+
+import java.io.Console;
 import java.util.List;
 import java.util.function.Function;
 
@@ -17,10 +19,10 @@ import com.spring.dto.PageRequestDTO;
 import com.spring.dto.PageResultDTO;
 import com.spring.entity.Document;
 import com.spring.entity.User;
-import com.spring.entity.WorkspaceUser;
 import com.spring.exception.UploadFailedException;
 import com.spring.repository.DocumentRepository;
 import com.spring.util.S3Util;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,7 @@ public class DocumentServiceImpl implements DocumentService{
    
    private final DocumentRepository documentRepository;
    private final DocumentUserServiceImpl documentUserService;
+   private final S3Util s3Util;
     
    @Override
 	public PageResultDTO<DocumentDTO, Document> getList(User userNo, PageRequestDTO pageRequestDTO) {
@@ -51,29 +54,37 @@ public class DocumentServiceImpl implements DocumentService{
       return document == null ? null : document.toDTO(document);
    }
    // 문서 작성
-
-   
-   
-
    // DB INSERT
    @Override
    @Transactional
-   public void insertDocument(DocumentDTO documentDTO ,List<DocumentUserDTO> documentUserList,MultipartFile multipart) {   
-         try {
-			S3Util.S3Upload(multipart, documentDTO);
-			Document document = documentRepository.save(documentDTO.toEntity(documentDTO));
-			System.out.println(document);
+
+   public Boolean insertDocument(DocumentDTO documentDTO ,List<DocumentUserDTO> documentUserList,MultipartFile multipart) {
+	   if(documentSize(documentDTO.getUser().getUserNo()) + Math.round((((double)multipart.getSize()/1024))*100)/100.0 > 10485760.00) {
+//		   10485760
+		   System.out.println(multipart.getContentType());
+		   return false;
+	   }
+	   try {
+			s3Util.S3Upload(multipart, documentDTO);
+		} catch (UploadFailedException e) {
+			e.printStackTrace();
+		}
+	  
+        Document document = documentRepository.save(documentDTO.toEntity(documentDTO));
+        documentUserList.forEach(v->v.setDocumentNo(document.toDTO(document)));
+        documentUserService.insertDocumentUser(documentUserList);
+	  
+        return true;
+			
+			
 //			List<DocumentUserDTO> documentUserDTOs = new ArrayList<DocumentUserDTO>();
 //			documentDTO.getUserList().forEach(v->documentUserDTOs.add(
 //															DocumentUserDTO.builder()
 //															.documentNo(document.toDTO(document))
 //															.userNo(v)
 //															.build()));
-			documentUserList.forEach(v->v.setDocumentNo(document.toDTO(document)));
-			documentUserService.insertDocumentUser(documentUserList);
-		} catch (UploadFailedException e) {
-			e.printStackTrace();
-		}
+
+
          
          
          
@@ -85,10 +96,10 @@ public class DocumentServiceImpl implements DocumentService{
       documentDTO.setDocumentNo(documentNo);
       DocumentDTO orginalDTO = selectDocument(documentDTO.getDocumentNo());
       if(orginalDTO != null) {
-         S3Util.deleteFile(orginalDTO.getFileName());
+         s3Util.deleteFile(orginalDTO.getFileName());
          
          try {
-			documentDTO = S3Util.S3Upload(multipart, documentDTO);
+			documentDTO = s3Util.S3Upload(multipart, documentDTO);
 			DocumentDTO newDTO = new DocumentDTO(orginalDTO, documentDTO);
 			documentRepository.save(newDTO.toEntity(newDTO));
 		} catch (UploadFailedException e) {
@@ -112,9 +123,16 @@ public class DocumentServiceImpl implements DocumentService{
    @Override
    public void deleteDocument(List<Long> documentNo) {
 	   for (int i = 0; i < documentNo.size(); i++) {
-		 S3Util.deleteFile(selectDocument(documentNo.get(i)).getFileName());
+		 s3Util.deleteFile(selectDocument(documentNo.get(i)).getFileName());
 		 documentRepository.deleteById(documentNo.get(i));
 	}
 
    }
+
+   // 문서 용량
+	@Override
+	public double documentSize(Long userNo) {
+	    return documentRepository.findDocumentSize(userNo);
+		
+	}
 }
