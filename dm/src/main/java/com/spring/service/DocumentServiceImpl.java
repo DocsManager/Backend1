@@ -132,6 +132,7 @@ public class DocumentServiceImpl implements DocumentService{
    // 문서 용량
 	@Override
 	public double documentSize(Long userNo) {
+		System.out.println(userNo);
 	    return documentRepository.findDocumentSize(userNo);
 		
 	}
