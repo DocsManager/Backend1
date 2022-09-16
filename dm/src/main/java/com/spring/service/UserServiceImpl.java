@@ -3,8 +3,10 @@ package com.spring.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,13 +51,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void insertUser(UserDTO userDTO) {
+	public void insertUser(UserDTO userDTO, MultipartFile profile) {
 		System.out.println(userDTO);
 		if (getUserById(userDTO.getId()) == null) {
 			String newPassword = pwEncoder.encode(userDTO.getPassword());
 			userDTO.toEntity(userDTO);
 			userDTO.setPassword(newPassword);
+			if(!profile.isEmpty() && "image".equals(profile.getContentType().split("/")[0]) ) {
+				try {
+					s3util.uploadFile("profile/"+userDTO.getId()+".png",profile.getInputStream());
+					userDTO.setProfile(s3util.getFileUrl("profile/"+userDTO.getId()+".png"));
+				} catch (AwsServiceException | SdkClientException | IOException e) {
+					e.printStackTrace();
+				}
+			}
 			userRepository.save(userDTO.toEntity(userDTO));
+		}
+		else {
+			System.out.println("몰루");
 		}
 	}
 
@@ -112,18 +125,27 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void updateProfile(MultipartFile profile, Long userNo) {
+		UserDTO userDTO = getUserByUserNo(userNo);
 		if(!profile.isEmpty() && "image".equals(profile.getContentType().split("/")[0]) ) {
-			UserDTO userDTO = getUserByUserNo(userNo);
+			String fileName = "profile/"+UUID.randomUUID().toString()+"_"+userDTO.getId()+".png";
 			if(userDTO != null) {
 				try {
-					s3util.uploadFile("profile/"+userDTO.getUserNo(),profile.getInputStream());
-					userDTO.setProfile(s3util.getFileUrl("profile/"+userDTO.getUserNo()));
-					userRepository.save(userDTO.toEntity(userDTO));						
+					if(userDTO.getProfile() != null) {
+						s3util.deleteFile("/profile"+userDTO.getProfile().split("profile")[1]);
+					}
+					s3util.uploadFile(fileName,profile.getInputStream());
+					userDTO.setProfile(s3util.getFileUrl(fileName));
 				} catch (AwsServiceException | SdkClientException | IOException e) {
 					e.printStackTrace();
 				}
 			}
+		}else {
+			if(userDTO.getProfile() != null) {
+				s3util.deleteFile("/profile"+userDTO.getProfile().split("profile")[1]);
+			}
+			userDTO.setProfile(null);
 		}
+		userRepository.save(userDTO.toEntity(userDTO));						
 	}
 	
 
@@ -138,6 +160,18 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	
-
+	public boolean userIdCheck(String id) {
+		User user = userRepository.findById(id);
+		if(id.isEmpty()) {
+			throw new NullPointerException("아이디 검색창 비어있음");
+		}
+		else {
+		if(user == null) {
+			return true;
+		}else 
+			return false;
+		}
+	}
+			
+		
 }
